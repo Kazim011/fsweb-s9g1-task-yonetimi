@@ -5,22 +5,31 @@ import TaskForm from "./TaskForm";
 import TaskHookForm from "./TaskHookForm";
 import PeopleForm from "./PeopleForm";
 import { initialTasks, initialTeam } from "./data";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const [tasks, setTasks] = useState(initialTasks);
   const [team, setTeam] = useState(initialTeam);
 
   function handleTaskSubmit(yeniTask) {
-    setTasks([yeniTask, ...tasks])
+    setTasks([yeniTask, ...tasks]);
+    notify(`${yeniTask.title} adlı görev eklenmiştir ✅ `);
   }
 
+  const notify = (deger) => toast(deger);
+
   function handlePeopleSubmit(yeniKisi) {
-    setTeam([...team, yeniKisi])
+    setTeam([...team, yeniKisi]);
+    notify(`${yeniKisi} adlı kişi 🧑👩  eklendi`);
   }
 
   function handleComplete(id) {
-    console.log("tamamlama fonksiyonunu buraya yazın")
+    const newArraylist = [...tasks];
+    const completeTaskList = newArraylist.find((item) => item.id === id);
+    completeTaskList.status = "yapıldı";
+    setTasks(newArraylist);
+    notify(`${completeTaskList.title} görevi tamamlandı 🎉`);
   }
 
   return (
@@ -36,6 +45,7 @@ function App() {
           <h2>Yeni Kişi</h2>
           <PeopleForm kisiler={team} submitFn={handlePeopleSubmit} />
         </div>
+        <ToastContainer />
       </div>
       <div className="columns">
         <div className="column">
@@ -59,7 +69,6 @@ function App() {
           </div>
         </div>
       </div>
-
     </div>
   );
 }
